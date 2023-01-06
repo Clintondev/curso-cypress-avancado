@@ -86,11 +86,6 @@ describe('Hacker Stories', () => {
       context('List of stories', () => {
         const stories = require('../fixtures/stories')
 
-      // Since the API is external,
-      // I can't control what it will provide to the frontend,
-      // and so, how can I assert on the data?
-      // This is why this test is being skipped.
-      // TODO: Find a way to test it out.
         it('shows the right data for all rendered stories', () => {
 
           cy.get('.item')
@@ -122,12 +117,7 @@ describe('Hacker Stories', () => {
           cy.get('.item').should('have.length', 1)
         })
 
-        // Since the API is external,
-        // I can't control what it will provide to the frontend,
-        // and so, how can I test ordering?
-        // This is why these tests are being skipped.
-        // TODO: Find a way to test them out.
-        context.only('Order by', () => {
+        context('Order by', () => {
           it('orders by title', () => {
             cy.get('.list-header-button:contains(Title)')
               .click()
@@ -150,11 +140,63 @@ describe('Hacker Stories', () => {
               .should('have.attr', 'href',stories.hits[1].url)
           })
 
-          it('orders by author', () => {})
+          it('orders by author', () => {
+            cy.get('.list-header-button:contains(Author)')
+              .as('authorsHeader')
+                .click()
+            
+            cy.get('.item')
+              .first()
+                .should('be.visible')
+                  .and('contain', stories.hits[0].author)
 
-          it('orders by comments', () => {})
+            cy.get('@authorsHeader')
+                .click()
+            
+            cy.get('.item')
+              .first()
+                .should('be.visible')
+                  .and('contain', stories.hits[1].author)      
 
-          it('orders by points', () => {})
+          })
+
+          it('orders by comments', () => {
+            cy.get('.list-header-button:contains(Comments)')
+              .as('commentsHeader')
+                .click()
+            
+            cy.get('.item')
+              .first()
+                .should('be.visible')
+                  .and('contain', stories.hits[1].num_comments)
+
+            cy.get('@commentsHeader')
+                .click()
+            
+            cy.get('.item')
+              .first()
+                .should('be.visible')
+                  .and('contain', stories.hits[0].num_comments) 
+          })
+
+          it('orders by points', () => {
+            cy.get('.list-header-button:contains(Points)')
+            .as('pointsHeader')
+              .click()
+          
+          cy.get('.item')
+            .first()
+              .should('be.visible')
+                .and('contain', stories.hits[0].points)
+
+          cy.get('@pointsHeader')
+              .click()
+          
+          cy.get('.item')
+            .first()
+              .should('be.visible')
+                .and('contain', stories.hits[1].points) 
+          })
         })
       })
     })
