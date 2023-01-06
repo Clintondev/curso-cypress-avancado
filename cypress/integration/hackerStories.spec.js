@@ -89,7 +89,29 @@ describe('Hacker Stories', () => {
       // and so, how can I assert on the data?
       // This is why this test is being skipped.
       // TODO: Find a way to test it out.
-        it.skip('shows the right data for all rendered stories', () => {})
+        it.only('shows the right data for all rendered stories', () => {
+          const stories = require('../fixtures/stories')
+
+          cy.get('.item')
+            .first()
+              .should('contain',stories.hits[0].title)
+                .and('contain',stories.hits[0].author)
+                .and('contain',stories.hits[0].num_comments)
+                .and('contain',stories.hits[0].points)
+          cy.get(`.item a:contains(${stories.hits[0].title})`)
+            .should('have.attr','href', stories.hits[0].url)
+
+
+          cy.get('.item')
+            .last()
+              .should('contain',stories.hits[1].title)
+              .and('contain',stories.hits[1].author)
+              .and('contain',stories.hits[1].num_comments)
+              .and('contain',stories.hits[1].points)
+          cy.get(`.item a:contains(${stories.hits[0].title})`)
+            .should('have.attr','href', stories.hits[0].url)              
+              
+        })
 
         it('shows one less story after dimissing the first one', () => {
           cy.get('.button-small')
@@ -186,7 +208,7 @@ describe('Hacker Stories', () => {
   })
 })
 
-context.skip('Errors', () => {
+context('Errors', () => {
   it('shows "Something went wrong ..." in case of a server error', () => {
     cy.intercept(
       'GET',
